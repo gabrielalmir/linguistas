@@ -52,4 +52,17 @@ O projeto segue a estrutura recomendada do Next.js com o App Router habilitado, 
 
 ---
 
+## Autenticação
+
+O projeto utiliza **Clerk** para autenticação de usuários. Clerk facilita a implementação de autenticação e gerenciamento de usuários com uma interface simples e segura.
+
+### Configuração do Clerk
+
+1. **Adicione as variáveis de ambiente**:
+    No arquivo `.env`, adicione as seguintes variáveis:
+    ```env
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+    CLERK_SECRET_KEY=
+    ```
+
 Made with ❤️ by Linguista Team
