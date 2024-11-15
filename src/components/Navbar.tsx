@@ -11,6 +11,8 @@ interface NavbarProps {
   className?: string;
 }
 
+type SessionAuthState = "unauthenticated" | "authenticated";
+
 const Navbar = ({ showFilters = false, className = '' }: NavbarProps) => {
   const [isSignUpOpen, setSignUpOpen] = useState(false);
   const [isLoginOpen, setLoginOpen] = useState(false);
@@ -30,7 +32,7 @@ const Navbar = ({ showFilters = false, className = '' }: NavbarProps) => {
     },
   }
 
-  const status: string = 'unauthenticated';
+  const [status, _setStatus] = useState<SessionAuthState>('unauthenticated');
 
   return (
     <div className={`flex justify-between items-center p-4 pb-0 ${className}`}>
