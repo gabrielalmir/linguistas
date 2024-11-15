@@ -1,38 +1,30 @@
-'use client';
+'use client'
 
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-import LoginModal from "./auth/LoginModal";
-import SignUpModal from "./auth/SignUpModal";
+import { useClerk, useUser } from "@clerk/nextjs"
+import Image from "next/image"
+import Link from "next/link"
+import { useState } from "react"
+import LoginModal from "./auth/LoginModal"
+import SignUpModal from "./auth/SignUpModal"
 
 interface NavbarProps {
-  showFilters?: boolean;
-  className?: string;
+  showFilters?: boolean
+  className?: string
 }
 
-type SessionAuthState = "unauthenticated" | "authenticated";
-
 const Navbar = ({ showFilters = false, className = '' }: NavbarProps) => {
-  const [isSignUpOpen, setSignUpOpen] = useState(false);
-  const [isLoginOpen, setLoginOpen] = useState(false);
+  const [isSignUpOpen, setSignUpOpen] = useState(false)
+  const [isLoginOpen, setLoginOpen] = useState(false)
+  const { user, isSignedIn } = useUser()
+  const { signOut } = useClerk()
 
-  const openSignUp = () => setSignUpOpen(true);
-  const closeSignUp = () => setSignUpOpen(false);
+  const openSignUp = () => setSignUpOpen(true)
+  const closeSignUp = () => setSignUpOpen(false)
 
-  const openLogin = () => setLoginOpen(true);
-  const closeLogin = () => setLoginOpen(false);
+  const openLogin = () => setLoginOpen(true)
+  const closeLogin = () => setLoginOpen(false)
 
-  const handleSignOut = () => console.log('teste');
-  const session = {
-    user: {
-      name: 'Joe Doe',
-      email: 'john.doe@example.com',
-      image: '',
-    },
-  }
-
-  const [status, _setStatus] = useState<SessionAuthState>('unauthenticated');
+  const handleSignOut = () => signOut()
 
   return (
     <div className={`flex justify-between items-center p-4 pb-0 ${className}`}>
@@ -63,16 +55,16 @@ const Navbar = ({ showFilters = false, className = '' }: NavbarProps) => {
       )}
 
       <div>
-        {status === "authenticated" ? (
+        {isSignedIn ? (
           <div className="flex items-center space-x-4">
-            {session.user?.image ? (
-              <Image src={session.user.image} alt="User Avatar" className="size-10 rounded-full" width={160} height={160} />
+            {user.imageUrl ? (
+              <Image src={user.imageUrl} alt="User Avatar" className="size-10 rounded-full" width={160} height={160} />
             ) : (
               <div className="size-10 flex items-center justify-center bg-red-400 rounded-full text-white">
-                {session.user?.email?.charAt(0).toUpperCase()}
+                {user.firstName?.charAt(0).toUpperCase() ?? user.emailAddresses[0]?.emailAddress.charAt(0).toUpperCase()}
               </div>
             )}
-            <span className="text-white font-bold">{session.user?.name}</span>
+            <span className="text-white font-bold">{user.fullName ?? user.firstName ?? user.emailAddresses[0]?.emailAddress}</span>
             <button className="px-4 py-2 rounded border border-rose-500 bg-transparent text-white" onClick={handleSignOut}>
               Sair
             </button>
@@ -88,7 +80,7 @@ const Navbar = ({ showFilters = false, className = '' }: NavbarProps) => {
       <SignUpModal isOpen={isSignUpOpen} onClose={closeSignUp} />
       <LoginModal isOpen={isLoginOpen} onClose={closeLogin} />
     </div>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar
